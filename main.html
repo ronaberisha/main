@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="main">
+    <h1 class="main">Welcome To GameZone</h1>
+    <button onclick="goToGamePage()">Play Memory Game</button>
+    <button onclick="goToTicTacToe()">Play Tic-Tac-Toe</button>
+	<button onclick="goToSnakeGame()">Play Snake Game</button>
+	<button onclick="goToFlappyBird()">Play Flappy Bird</button>
+	<button onclick="goToHangmanGame()">Play Hangman Game</button>
+	<button onclick="goToWordSearchGame()">World Search Game</button>
+    <script>
+	
+        function goToGamePage() {
+            window.location.href = "index.html"; // Link to the memory game page
+        }
+        function goToTicTacToe() {
+            window.location.href = "tic tac toe.html"; // Link to the Tic-Tac-Toe page
+        }
+		function goToSnakeGame() {
+        window.location.href = "snake game.html"; // Link to the Snake Game page
+    }
+	function goToFlappyBird() {
+        window.location.href = "flappy bird.html"; // Link to the Flappy Bird page
+    }
+	function goToHangmanGame() {
+        window.location.href = "hangman game.html"; // Link to the Flappy Bird page
+    }
+	function goToWordSearchGame() {
+        window.location.href = "word search.html"; // Link to the Flappy Bird page
+    }
+    </script>
+</body>
+</html>

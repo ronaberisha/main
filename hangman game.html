@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        .word { font-size: 24px; letter-spacing: 10px; margin: 20px; }
+        .letters { margin-top: 20px; }
+        .letters button { margin: 5px; padding: 10px; font-size: 18px; cursor: pointer; }
+        .message { font-size: 22px; font-weight: bold; margin-top: 20px; }
+        .restart { display: none; margin: 20px auto; padding: 10px; font-size: 18px; cursor: pointer; background: green; color: white; border: none; display: block; width: 150px; }
+        .hangman-container { font-family: monospace; font-size: 20px; white-space: pre; line-height: 1.2; margin-top: 20px; }
+        canvas { border: 2px solid black; background-color: white; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Hangman - Word Guessing Game</h1>
+    <canvas id="hangmanCanvas" width="200" height="250"></canvas>
+    <p class="word" id="wordDisplay"></p>
+    <div class="letters" id="letterButtons"></div>
+    <p class="message" id="message"></p>
+    <button class="restart" id="restartBtn" onclick="startGame()">Play Again</button>
+    <br><br>
+    <button onclick="goToMainPage()">Go to Main Page</button>
+
+    <script>
+        const words = ["javascript", "hangman", "developer", "coding", "computer"];
+        let selectedWord, guessedWord, attempts;
+        const maxAttempts = 6;
+        let canvas, ctx;
+
+        function startGame() {
+            selectedWord = words[Math.floor(Math.random() * words.length)];
+            guessedWord = Array(selectedWord.length).fill("_");
+            attempts = 0;
+            document.getElementById("wordDisplay").innerText = guessedWord.join(" ");
+            document.getElementById("message").innerText = "";
+            document.getElementById("restartBtn").style.display = "none";
+            generateButtons();
+            resetCanvas();
+        }
+
+        function generateButtons() {
+            let lettersDiv = document.getElementById("letterButtons");
+            lettersDiv.innerHTML = "";
+            "abcdefghijklmnopqrstuvwxyz".split("").forEach(letter => {
+                let button = document.createElement("button");
+                button.innerText = letter;
+                button.onclick = function() { guessLetter(letter, button); };
+                lettersDiv.appendChild(button);
+            });
+        }
+
+        function guessLetter(letter, button) {
+            button.disabled = true;
+            if (selectedWord.includes(letter)) {
+                for (let i = 0; i < selectedWord.length; i++) {
+                    if (selectedWord[i] === letter) guessedWord[i] = letter;
+                }
+                document.getElementById("wordDisplay").innerText = guessedWord.join(" ");
+                if (!guessedWord.includes("_")) endGame("You Win! 🎉");
+            } else {
+                attempts++;
+                drawHangman(attempts);
+                if (attempts === maxAttempts) endGame("Game Over! The word was: " + selectedWord);
+            }
+        }
+
+        function endGame(message) {
+            document.getElementById("message").innerText = message;
+            document.getElementById("restartBtn").style.display = "block";
+            document.getElementById("letterButtons").innerHTML = "";
+        }
+
+        function goToMainPage() {
+            window.location.href = "main.html";
+        }
+
+        function resetCanvas() {
+            canvas = document.getElementById("hangmanCanvas");
+            ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(20, 230); ctx.lineTo(180, 230); // Base
+            ctx.moveTo(50, 230); ctx.lineTo(50, 20); // Pole
+            ctx.lineTo(120, 20); // Top beam
+            ctx.lineTo(120, 40); // Rope
+            ctx.stroke();
+        }
+
+        function drawHangman(stage) {
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 2;
+            if (stage === 1) { ctx.beginPath(); ctx.arc(120, 55, 15, 0, Math.PI * 2); ctx.stroke(); } // Head
+            if (stage === 2) { ctx.moveTo(120, 70); ctx.lineTo(120, 130); ctx.stroke(); } // Body
+            if (stage === 3) { ctx.moveTo(120, 80); ctx.lineTo(100, 110); ctx.stroke(); } // Left arm
+            if (stage === 4) { ctx.moveTo(120, 80); ctx.lineTo(140, 110); ctx.stroke(); } // Right arm
+            if (stage === 5) { ctx.moveTo(120, 130); ctx.lineTo(100, 170); ctx.stroke(); } // Left leg
+            if (stage === 6) { ctx.moveTo(120, 130); ctx.lineTo(140, 170); ctx.stroke(); } // Right leg
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
+
+

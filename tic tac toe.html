@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #222;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 { margin: 10px; }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+            margin: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 32px;
+            background: #444;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .cell:hover { background: #666; }
+        .win { background: red !important; }
+        #message { height: 30px; color: yellow; font-size: 24px; }
+        button {
+            padding: 10px 20px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Tic-Tac-Toe</h1>
+    <div id="message"></div>
+    <div class="board" id="board"></div>
+    <button onclick="location.href='main.html'">Go to Main Page</button>
+
+    <script>
+        const board = document.getElementById("board");
+        const message = document.getElementById("message");
+        let cells = Array(9).fill(null);
+        let current = "X";
+        let over = false;
+
+        const winPatterns = [
+            [0,1,2],[3,4,5],[6,7,8],
+            [0,3,6],[1,4,7],[2,5,8],
+            [0,4,8],[2,4,6]
+        ];
+
+        function drawBoard() {
+            board.innerHTML = "";
+            cells.forEach((val, i) => {
+                const cell = document.createElement("div");
+                cell.className = "cell";
+                cell.textContent = val;
+                cell.onclick = () => move(i);
+                board.appendChild(cell);
+            });
+        }
+
+        function move(i) {
+            if (cells[i] || over) return;
+            cells[i] = current;
+            const win = checkWin();
+            if (win) {
+                highlight(win);
+                message.textContent = `${current} Wins!`;
+                over = true;
+                setTimeout(reset, 1500);
+                return;
+            }
+            if (cells.every(c => c)) {
+                message.textContent = "It's a Draw!";
+                over = true;
+                setTimeout(reset, 1500);
+                return;
+            }
+            current = current === "X" ? "O" : "X";
+            drawBoard();
+        }
+
+        function checkWin() {
+            return winPatterns.find(p => {
+                const [a,b,c] = p;
+                return cells[a] && cells[a] === cells[b] && cells[a] === cells[c];
+            });
+        }
+
+        function highlight(pattern) {
+            pattern.forEach(i => board.children[i].classList.add("win"));
+        }
+
+        function reset() {
+            cells = Array(9).fill(null);
+            current = "X";
+            over = false;
+            message.textContent = "";
+            drawBoard();
+        }
+
+        drawBoard();
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body class="index">
+		<h1 class="index" style="width: 1350px; height: 37px">Memory Game</h1>
+  
+		<button onclick="startGame()" style="width: 128px; height: 25px">
+		<strong>Start Game</strong></button>
+		
+		
+		<div class="game-container">
+        <div class="square red" onclick="playerClick(0)"></div>
+        <div class="square blue" onclick="playerClick(1)"></div>
+        <div class="square green" onclick="playerClick(2)"></div>
+        <div class="square yellow" onclick="playerClick(3)"></div>
+    </div>
+		<button onclick="goToMainPage()">Go to Main Page</button>
+    <script>
+		function goToMainPage() {
+            window.location.href = "main.html"; // Opens the main page
+        }
+        let sequence = [];
+        let playerSequence = [];
+        let level = 0;
+
+        function startGame() {
+            sequence = [];
+            playerSequence = [];
+            level = 0;
+            nextRound();
+        }
+
+        function nextRound() {
+            playerSequence = [];
+            level++;
+            let randomNumber = Math.random(); 
+            let colorIndex = Math.floor(randomNumber * 4);
+            sequence.push(colorIndex);
+            showSequence();
+        }
+
+        function showSequence() {
+            let i = 0;
+            let interval = setInterval(() => {
+                flashColor(sequence[i]);
+                i++;
+                if (i >= sequence.length) clearInterval(interval);
+            }, 600);
+        }
+
+        function flashColor(index) {
+            let squares = document.getElementsByClassName("square");
+            squares[index].classList.add("flash");
+            setTimeout(() => {
+                squares[index].classList.remove("flash");
+            }, 300);
+        }
+
+        function playerClick(index) {
+            playerSequence.push(index);
+            flashColor(index);
+            if (playerSequence[playerSequence.length - 1] !== sequence[playerSequence.length - 1]) {
+                alert("Game Over! Level: " + level);
+                return;
+            }
+            if (playerSequence.length === sequence.length) {
+                setTimeout(nextRound, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
